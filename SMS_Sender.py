@@ -1,5 +1,4 @@
 ## Initializing Depedancies
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -27,7 +26,10 @@ wait_for_verification = input()
 
 sleep(2)
 
-names_list = ["9176684086" ,"9962055580","73585 79588","98845 20487"]
+#names_list = ["9176684086" ,"9962055580","73585 79588","98845 20487"]
+
+donorData = pd.read_csv(r"Final_Data.csv")
+names_list = [list(row) for row in donorData.values]
 
 for name in names_list:
     start_chat_button = driver.find_element_by_xpath("/html/body/mw-app/mw-bootstrap/div/main/mw-main-container/div/mw-main-nav/div/mw-fab-link/a")
@@ -36,7 +38,7 @@ for name in names_list:
     sleep(1)
 
     search_for_chat = driver.find_element_by_xpath("/html/body/mw-app/mw-bootstrap/div/main/mw-main-container/div/mw-new-conversation-container/mw-new-conversation-sub-header/div/div[2]/mw-contact-chips-input/div/mat-chip-list/div/input")
-    search_for_chat.send_keys(name)
+    search_for_chat.send_keys(name[2])
     search_for_chat.send_keys("\n")
 
     sleep(1)
@@ -68,4 +70,12 @@ for name in names_list:
     send_text.send_keys("\n")
     sleep(1)
 
+    name.append("Sent")
+    data = [name]
+    column_names = ["Name", "BloodGroup", "PhoneNo","District","City","SMS"]
+    df = pd.DataFrame(data, columns=column_names)
+    df.to_csv('Sent_log.csv',mode='a', index=False, header=False)
 
+
+sleep(5)
+driver.quit()
